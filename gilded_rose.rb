@@ -1,8 +1,7 @@
 def update_quality(items)
-  items.each do |item|
-    verify_item(item)
-  end
+  items.each {|item| verify_item(item)}
 end
+
 def verify_sellin(param)
   sell_in ={
     "< 0" => lambda {puts "hola marce linda "},
@@ -16,10 +15,9 @@ def verify_name(param, item)
   names = {
     "Sulfuras, Hand of Ragnaros"=> lambda {},
     "Aged Brie"=> lambda { item.sell_in -= 1 },
-    "Backstage passes to a TAFKAL80ETC concert"=> lambda {item.sell_in -= 1 },
-    "NORMAL ITEM"=> lambda { item.sell_in -= 1}
+    "Backstage passes to a TAFKAL80ETC concert"=> lambda {item.sell_in -= 1 }
   }
-  names[param].call
+  names[param] || lambda { item.sell_in -= 1}
 end
 
 def verify_quality(param)
@@ -29,6 +27,7 @@ def verify_quality(param)
   }
   quality[param].call
 end
+
 def verify_item(item)
   if item.quality < 50 and !(item.name != 'Aged Brie' && item.name != 'Backstage passes to a TAFKAL80ETC concert')
     item.quality += 1
@@ -39,7 +38,9 @@ def verify_item(item)
       item.quality += 1
     end
   end
-  verify_name(item.name, item)
+
+  verify_name(item.name, item).call
+
   if item.quality > 0 
     if item.name == "NORMAL ITEM"
       item.quality -= 1
