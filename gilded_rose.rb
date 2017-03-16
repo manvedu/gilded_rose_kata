@@ -11,6 +11,12 @@ def verify_sellin(param)
   sell_in[param].call
 end
 
+def increase_quality(item)
+  item.quality += 1
+end
+def decrease_quality(item)
+  item.quality -= 1
+end
 def decrease_sell_in(item)
   item.sell_in -= 1
 end
@@ -33,23 +39,21 @@ end
 
 def verify_item(item)
   if item.quality < 50 and !(item.name != 'Aged Brie' && item.name != 'Backstage passes to a TAFKAL80ETC concert')
-    item.quality += 1
+    increase_quality(item)
     if item.sell_in < 11 and item.quality < 50 and item.name == 'Backstage passes to a TAFKAL80ETC concert'
-      item.quality += 1
+      increase_quality(item)
     end
     if item.sell_in < 6 and item.quality < 50 and item.name == 'Backstage passes to a TAFKAL80ETC concert'
-      item.quality += 1
+      increase_quality(item)
     end
   end
 
   verify_name(item.name, item).call
 
-  if item.quality > 0 
-    if item.name == "NORMAL ITEM"
-      item.quality -= 1
-    end
-    if item.name != 'Sulfuras, Hand of Ragnaros' and item.name != 'Backstage passes to a TAFKAL80ETC concert' and item.name != "Aged Brie" and item.sell_in < 0
-      item.quality -= 1
+  if item.quality > 0 and item.name == "NORMAL ITEM"
+    decrease_quality(item)
+    if item.sell_in < 0
+      decrease_quality(item)
     end
   end
 
