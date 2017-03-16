@@ -14,12 +14,19 @@ end
 def increase_quality(item)
   item.quality += 1
 end
+
 def decrease_quality(item)
   item.quality -= 1
 end
+
+def set_quality_zero(item)
+  item.quality = 0
+end
+
 def decrease_sell_in(item)
   item.sell_in -= 1
 end
+
 def verify_name(param, item)
   names = {
     "Sulfuras, Hand of Ragnaros"=> lambda {},
@@ -58,10 +65,11 @@ def verify_item(item)
   end
 
   if item.name == 'Backstage passes to a TAFKAL80ETC concert' and item.name != "Aged Brie" and item.sell_in < 0
-    item.quality = 0
+    set_quality_zero(item)
   end
+
   if item.quality < 50 and item.name == "Aged Brie" and item.sell_in < 0
-    item.quality += 1
+    increase_quality(item)
   end
 end
 
