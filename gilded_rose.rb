@@ -11,11 +11,14 @@ def verify_sellin(param)
   sell_in[param].call
 end
 
+def decrease_sell_in(item)
+  item.sell_in -= 1
+end
 def verify_name(param, item)
   names = {
     "Sulfuras, Hand of Ragnaros"=> lambda {},
     "Aged Brie"=> lambda { item.sell_in -= 1 },
-    "Backstage passes to a TAFKAL80ETC concert"=> lambda {item.sell_in -= 1 }
+    "Backstage passes to a TAFKAL80ETC concert"=> lambda {decrease_sell_in(item) }
   }
   names[param] || lambda { item.sell_in -= 1}
 end
