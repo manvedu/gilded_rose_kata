@@ -1,5 +1,15 @@
 def update_quality(items)
   items.each do |item|
+    sell_in ={
+      "< 0" => lambda {},
+      "< 6"=> lambda {},
+      "< 11"=> lambda {}
+    }
+    names = {
+      "Sulfuras, Hand of Ragnaros"=> lambda {},
+      "Aged Brie"=> lambda {},
+      "Backstage passes to a TAFKAL80ETC concert"=> lambda {}
+    }
     if item.quality > 0 and item.name != 'Sulfuras, Hand of Ragnaros' and item.name != 'Aged Brie' && item.name != 'Backstage passes to a TAFKAL80ETC concert'
       item.quality -= 1
     end
