@@ -20,8 +20,8 @@ end
 
 def verify_quality(param, item)
   quality = {
-    0 => lambda { item.quality > 0},
-    50 => lambda { item.quality < 50 }
+    0 => lambda { comparer_than_(item.quality,param)},
+    50 => lambda {  comparer_than_(param, item.quality) }
   }
   quality[param].call
 end
@@ -29,12 +29,11 @@ end
 ESPECIAL_NAMES =[ "Sulfuras, Hand of Ragnaros", "Aged Brie", "Backstage passes to a TAFKAL80ETC concert"]
 
 def verify_sell_in(param, item)
-  names = {
-    "Sulfuras, Hand of Ragnaros"=> lambda {},
-    "Aged Brie"=> lambda { },
-    "Backstage passes to a TAFKAL80ETC concert"=> lambda {decrease_sell_in(item) }
+  values = {
+    11 => lambda { comparer_than_(param,item.sell_in ) },
+    6 => lambda { comparer_than_(param,item.sell_in )},
   }
-  names[param] || lambda { decrease_sell_in(item)}
+  values[param] || lambda {decrease_sell_in(item)}
 end
 
 def verify_name(param, item)
@@ -57,8 +56,8 @@ def verify_item(item)
 
   verify_name(item.name, item).call
 
-  verify_quality(0, item) && item.quality > 0 && !ESPECIAL_NAMES.include?(item.name) && item.sell_in > 0 && decrease_quality(item, 1)
-  verify_quality(0, item) && !ESPECIAL_NAMES.include?(item.name) && item.sell_in < 0 && decrease_quality(item, 2) 
+  verify_quality( 0, item) && item.quality > 0 && !ESPECIAL_NAMES.include?(item.name) && item.sell_in > 0 && decrease_quality(item, 1)
+  verify_quality( 0, item) && !ESPECIAL_NAMES.include?(item.name) && item.sell_in < 0 && decrease_quality(item, 2) 
 
   ESPECIAL_NAMES.last.include?(item.name) && item.name != "Aged Brie" && item.sell_in < 0 && set_quality_zero(item)
 
