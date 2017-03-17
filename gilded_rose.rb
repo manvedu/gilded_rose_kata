@@ -60,7 +60,7 @@ def not_special_name?(name)
 end
 
 def verify_item(item)
-  if item.quality < 50 and !(item.name != 'Aged Brie' && item.name != 'Backstage passes to a TAFKAL80ETC concert')
+  if item.quality < 50 and ESPECIAL_NAMES.last(2).include?(item.name)
     increase_quality(item)
     if item.sell_in < 11 and item.name == 'Backstage passes to a TAFKAL80ETC concert'
       increase_quality(item)
