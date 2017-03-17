@@ -1,3 +1,5 @@
+ESPECIAL_NAMES =[ "Sulfuras, Hand of Ragnaros", "Aged Brie", "Backstage passes to a TAFKAL80ETC concert"]
+
 def update_quality(items)
   items.each {|item| verify_item(item)}
 end
@@ -25,8 +27,6 @@ def verify_quality(param, item)
   }
   quality[param].call
 end
-
-ESPECIAL_NAMES =[ "Sulfuras, Hand of Ragnaros", "Aged Brie", "Backstage passes to a TAFKAL80ETC concert"]
 
 def verify_sell_in(param, item)
   values = {
@@ -60,7 +60,6 @@ def verify_item(item)
   verify_quality( 0, item) && !ESPECIAL_NAMES.include?(item.name) && item.sell_in < 0 && decrease_quality(item, 2) 
 
   ESPECIAL_NAMES.last.include?(item.name) && item.name != "Aged Brie" && item.sell_in < 0 && set_quality_zero(item)
-
   verify_quality(50, item) && item.name == "Aged Brie" && item.sell_in < 0 && increase_quality(item, 1)
 end
 
