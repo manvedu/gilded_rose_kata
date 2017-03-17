@@ -15,8 +15,8 @@ def increase_quality(item)
   item.quality += 1
 end
 
-def decrease_quality(item)
-  item.quality -= 1
+def decrease_quality(item, amount)
+  item.quality -= amount
 end
 
 def set_quality_zero(item)
@@ -27,6 +27,16 @@ def decrease_sell_in(item)
   item.sell_in -= 1
 end
 
+def verify_quality(param)
+  quality = {
+    " > 0" => lambda {},
+    " < 50" => lambda {}
+  }
+  quality[param].call
+end
+
+ESPECIAL_NAMES =[ "Sulfuras, Hand of Ragnaros", "Aged Brie", "Backstage passes to a TAFKAL80ETC concert"]
+
 def verify_name(param, item)
   names = {
     "Sulfuras, Hand of Ragnaros"=> lambda {},
@@ -36,33 +46,34 @@ def verify_name(param, item)
   names[param] || lambda { item.sell_in -= 1}
 end
 
-def verify_quality(param)
-  quality = {
-    " > 0" => lambda {},
-    " < 50" => lambda {}
-  }
-  quality[param].call
+def ranger(number1,number2)
+  number1 > number2
+end
+
+def comparer_than_(number1,number2)
+  number1 > number2
+end
+
+
+def not_special_name?(name)
+  !ESPECIAL_NAMES.include?(name)
 end
 
 def verify_item(item)
   if item.quality < 50 and !(item.name != 'Aged Brie' && item.name != 'Backstage passes to a TAFKAL80ETC concert')
     increase_quality(item)
-    if item.sell_in < 11 and item.quality < 50 and item.name == 'Backstage passes to a TAFKAL80ETC concert'
+    if item.sell_in < 11 and item.name == 'Backstage passes to a TAFKAL80ETC concert'
       increase_quality(item)
     end
-    if item.sell_in < 6 and item.quality < 50 and item.name == 'Backstage passes to a TAFKAL80ETC concert'
+    if item.sell_in < 6 and item.name == 'Backstage passes to a TAFKAL80ETC concert'
       increase_quality(item)
     end
   end
 
   verify_name(item.name, item).call
 
-  if item.quality > 0 and item.name == "NORMAL ITEM"
-    decrease_quality(item)
-    if item.sell_in < 0
-      decrease_quality(item)
-    end
-  end
+  decrease_quality(item, 1) if item.quality > 0 and not_special_name?(item.name) and item.sell_in > 0
+  decrease_quality(item, 2) if item.quality > 0 and not_special_name?(item.name) and item.sell_in < 0
 
   if item.name == 'Backstage passes to a TAFKAL80ETC concert' and item.name != "Aged Brie" and item.sell_in < 0
     set_quality_zero(item)
